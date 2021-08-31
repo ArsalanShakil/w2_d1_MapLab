@@ -7,20 +7,39 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.map
+import kotlinx.android.synthetic.main.activity_map.*
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.Marker
 
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private lateinit var marker: Marker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Configuration.getInstance().load(
+            this,
+            PreferenceManager.getDefaultSharedPreferences(this)
+        )
+
         setContentView(R.layout.activity_main)
         var fastestSpeed = 0.0F
 
+        marker = Marker(map)
+        marker.icon = AppCompatResources.getDrawable(this,
+            R.drawable.ic_baseline_person_pin_24)
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fun getAddress(lat: Double, lng: Double): String {
@@ -36,8 +55,15 @@ class MainActivity : AppCompatActivity() {
                 Log.d("LOCATION", "MAYBE something?")
                 locationResult ?: return
                 for (location in locationResult.locations) {
-                    coordTxt.text = "${location.longitude.toString()} and ${location.latitude.toString()}"
-                    addressTxt.text = getAddress(location.latitude,location.longitude)
+                    map.setTileSource(TileSourceFactory.MAPNIK)
+                    map.setMultiTouchControls(true)
+                    map.controller.setZoom(18.0)
+                    map.controller.setCenter(GeoPoint(location.latitude, location.longitude))
+                    marker.position = GeoPoint(location.latitude, location.longitude)
+                    marker.title = "${getAddress(location.latitude, location.longitude)},${location.latitude},${location.longitude},${location.altitude}"
+                    marker.closeInfoWindow()
+                    map.overlays.add(marker)
+                    map.invalidate()
                     speedTxt.text = location.speed.toString()
                     if (fastestSpeed < location.speed) {
                         fastestSpeed = location.speed
@@ -75,6 +101,8 @@ class MainActivity : AppCompatActivity() {
         stopTrackingBtn.setOnClickListener {
             fusedLocationClient.removeLocationUpdates(locationCallback)
         }
+
+
 
 
     }
