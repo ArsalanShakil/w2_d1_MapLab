@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">w2_d1_LocationLab</string>
+    <string name="speed">%.1f</string>
 </resources>

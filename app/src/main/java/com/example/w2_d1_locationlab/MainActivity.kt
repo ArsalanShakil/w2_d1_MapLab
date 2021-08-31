@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,6 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         var fastestSpeed = 0.0F
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        map.setMultiTouchControls(true)
+
+        map.controller.setZoom(9.0)
 
         marker = Marker(map)
         marker.icon = AppCompatResources.getDrawable(this,
@@ -56,29 +61,27 @@ class MainActivity : AppCompatActivity() {
                 Log.d("LOCATION", "MAYBE something?")
                 locationResult ?: return
                 for (location in locationResult.locations) {
-                    map.setTileSource(TileSourceFactory.MAPNIK)
-                    map.setMultiTouchControls(true)
 
-                    map.controller.setZoom(15.0)
-                    map.controller.setCenter(GeoPoint(location.latitude, location.longitude))
-                    marker.position = GeoPoint(location.latitude, location.longitude)
-                    marker.title = "${getAddress(location.latitude, location.longitude)},${location.latitude},${location.longitude},${location.altitude}"
-                    marker.closeInfoWindow()
-                    map.overlays.add(marker)
-                    map.invalidate()
-                    speedTxt.text = location.speed.toString()
+
+                    speedTxt.text = getString(R.string.speed, (location.speed * 3.6))
                     if (fastestSpeed < location.speed) {
                         fastestSpeed = location.speed
-                        fastestSpeedTxt.text = fastestSpeed.toString()
-                    } else {
-                        fastestSpeedTxt.text = fastestSpeed.toString()
                     }
+                    fastestSpeedTxt.text = getString(R.string.speed, (fastestSpeed * 3.6))
                     Log.d("GEOLOCATION", "new location latitude:${location.latitude} and longitude:${location.longitude} and speed:${location.speed}" )
                 }
+                val location = locationResult.lastLocation
+                map.controller.setCenter(GeoPoint(location.latitude, location.longitude))
+                marker.position = GeoPoint(location.latitude, location.longitude)
+                marker.title = "${getAddress(location.latitude, location.longitude)},${location.latitude},${location.longitude},${location.altitude}"
+                marker.closeInfoWindow()
+                map.overlays.add(marker)
+                map.invalidate()
             }
         }
 
         startTrackingBtn.setOnClickListener {
+            Toast.makeText(applicationContext,"Location tracking started",Toast.LENGTH_SHORT).show()
             Log.d("LOCATION", "On click at least, please!")
             val locationRequest = LocationRequest
                 .create()
