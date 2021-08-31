@@ -174,26 +174,37 @@
     <Button
         android:id="@+id/startTrackingBtn"
         android:layout_width="170dp"
-        android:layout_height="90dp"
+        android:layout_height="50dp"
         android:text="Start tracking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.936" />
+        app:layout_constraintVertical_bias="0.873" />
 
     <Button
         android:id="@+id/stopTrackingBtn"
         android:layout_width="170dp"
-        android:layout_height="90dp"
+        android:layout_height="50dp"
         android:text="Stop tracking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.933"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.936" />
+        app:layout_constraintVertical_bias="0.873" />
+
+    <Button
+        android:id="@+id/showMapBtn"
+        android:layout_width="375dp"
+        android:layout_height="49dp"
+        android:text="Open Map"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.963" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
