@@ -20,6 +20,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -57,7 +58,8 @@ class MainActivity : AppCompatActivity() {
                 for (location in locationResult.locations) {
                     map.setTileSource(TileSourceFactory.MAPNIK)
                     map.setMultiTouchControls(true)
-                    map.controller.setZoom(18.0)
+
+                    map.controller.setZoom(15.0)
                     map.controller.setCenter(GeoPoint(location.latitude, location.longitude))
                     marker.position = GeoPoint(location.latitude, location.longitude)
                     marker.title = "${getAddress(location.latitude, location.longitude)},${location.latitude},${location.longitude},${location.altitude}"
